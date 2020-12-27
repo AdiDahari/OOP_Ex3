@@ -1,14 +1,20 @@
-from typing import Tuple, Dict
+from typing import Tuple
+
 from GraphInterface import GraphInterface
 
 
 class Node:
-
-    def __init__(self, key: int, pos: Tuple = None, edges_in: dict = {}, edges_out: dict = {}):
+    def __init__(self, key: int, pos: Tuple = None, edges_in: dict = None, edges_out: dict = None):
         self.key = key
         self.pos = pos
-        self.e_in = edges_in
-        self.e_out = edges_out
+        if edges_in is None:
+            self.e_in = {}
+        else:
+            self.e_in = edges_in
+        if edges_out is None:
+            self.e_out = {}
+        else:
+            self.e_out = edges_out
 
     def __str__(self):
         return f"pos:{self.pos}, id:{self.key}"
@@ -26,8 +32,14 @@ class Node:
 class DiGraph(GraphInterface):
 
     def __init__(self, nodes: dict = {}, edges: list = [], ec: int = 0, mc: int = 0):
-        self.nodes = nodes
-        self.edges = edges
+        if nodes is None:
+            self.nodes = {}
+        else:
+            self.nodes = nodes
+        if edges is None:
+            self.edges = []
+        else:
+            self.edges = edges
         self.ec = ec
         self.mc = mc
 
@@ -60,11 +72,13 @@ class DiGraph(GraphInterface):
         return self.mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
+        if id1 == id2:
+            return False
         n1 = self.nodes.get(id1)
         n2 = self.nodes.get(id2)
         if (n1 is not None) and (n2 is not None) and (n1.e_out.get(id2) is None) and (weight >= 0):
-            n1.e_out.update({id2: (id2, weight)})
-            n2.e_in.update({id1: (id1, weight)})
+            n1.e_out[id2] = (id2, weight)
+            n2.e_in[id1] = (id1, weight)
             e = (id1, id2)
             self.edges.append(e)
             self.ec += 1
@@ -87,11 +101,13 @@ class DiGraph(GraphInterface):
         edges_in = n.e_in
         edges_out = n.e_out
         for i in edges_in:
-            i.e_out.pop(node_id)
+            self.nodes[i].e_out.pop(node_id)
             self.ec -= 1
+            self.edges.remove((i, node_id))
         for j in edges_out:
-            j.e_in.pop(node_id)
+            self.nodes[j].e_in.pop(node_id)
             self.ec -= 1
+            self.edges.remove((node_id, j))
         self.nodes.pop(node_id)
         self.mc += 1
         return True
@@ -111,16 +127,17 @@ class DiGraph(GraphInterface):
 
 def main():
     g = DiGraph()
-    g.add_node(0)
-    g.add_node(1)
-    g.add_node(2)
-    g.add_node(3)
-    g.add_edge(0, 1, 1)
-    g.add_edge(0, 2, 1)
-    g.add_edge(0, 3, 1)
-    print(g.all_out_edges_of_node(1))
-    # print(g.all_in_edges_of_node(3))
-    # print(g.all_in_edges_of_node(1))
+    for i in range(10):
+        g.add_node(i)
+        if i > 0:
+            g.add_edge(i-1, i, i)
+    for i in range(10):
+        g.add_edge(0, i, 1)
+    print(g)
+    print(g.all_out_edges_of_node(0))
+    print(g.all_in_edges_of_node(0))
+    g.add_node(10)
+    print(g.all_in_edges_of_node(10))
 
 
 if __name__ == '__main__':
