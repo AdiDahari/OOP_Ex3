@@ -49,6 +49,9 @@ class DiGraph(GraphInterface):
     def __repr__(self):
         return str(self)
 
+    def __len__(self):
+        return len(self.nodes)
+
     def v_size(self) -> int:
         return len(self.nodes)
 
@@ -95,9 +98,9 @@ class DiGraph(GraphInterface):
         return True
 
     def remove_node(self, node_id: int) -> bool:
-        n = self.nodes[node_id]
-        if n is None:
+        if node_id not in self.nodes:
             return False
+        n = self.nodes[node_id]
         edges_in = n.e_in
         edges_out = n.e_out
         for i in edges_in:
