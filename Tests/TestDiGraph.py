@@ -1,5 +1,5 @@
 from unittest import TestCase
-from DiGraph import DiGraph, Node
+from src.DiGraph import DiGraph
 
 
 class TestDiGraph(TestCase):
