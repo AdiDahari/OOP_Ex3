@@ -51,10 +51,51 @@ class GraphAlgo(GraphAlgoInterface):
         return dists[id2], path
 
     def connected_component(self, id1: int) -> list:
-        pass
+        if id1 not in self.g.nodes:
+            return None
+        start = self.g.nodes.get(id1)
+        connected = [start, ]
+        q = [start, ]
+        visited1 = [start, ]
+        visited2 = [start, ]
+        while len(q) > 0:
+            n = q.pop(0)
+            neighs = self.g.all_out_edges_of_node(n.key)
+            for i in neighs:
+                nn = self.g.nodes[i]
+                if not visited1.__contains__(nn):
+                    visited1.append(nn)
+                    q.append(nn)
+        q.append(start)
+        while len(q) > 0:
+            n = q.pop(0)
+            neighs = self.g.all_in_edges_of_node(n.key)
+            for i in neighs:
+                nn = self.g.nodes[i]
+                if not visited2.__contains__(nn):
+                    visited2.append(nn)
+                    q.append(nn)
+        if len(visited1) <= len(visited2):
+            for i in visited1:
+                if visited2.__contains__(i) and not connected.__contains__(i):
+                    connected.append(i)
+        elif len(visited1) > len(visited2):
+            for i in visited2:
+                if visited1.__contains__(i) and not connected.__contains__(i):
+                    connected.append(i)
+        return connected
 
     def connected_components(self) -> List[list]:
-        pass
+        components = []
+        for i in self.g.nodes.values():
+            flag = False
+            for j in components:
+                if j.__contains__(i):
+                    flag = True
+                    break
+            if not flag:
+                components.append(self.connected_component(i.key))
+        return components
 
     def plot_graph(self) -> None:
         pass
@@ -62,14 +103,13 @@ class GraphAlgo(GraphAlgoInterface):
 
 def main():
     g = DiGraph()
-    for i in range(4):
-        g.add_node(i)
-        g.add_edge(i-1, i, 1)
-    g.add_edge(1,3,1)
-    # g.remove_edge(1, 2)
-    g.remove_edge(1, 3)
+    # for i in range(4):
+    #     g.add_node(i)
+    #     g.add_edge(i - 1, i, 1)
+    #     g.add_edge(i, i - 1, 1)
     ga = GraphAlgo(g)
-    print(ga.shortest_path(1, 3))
+    # g.remove_edge(1, 2)
+    print(ga.connected_components())
 
 
 if __name__ == '__main__':
