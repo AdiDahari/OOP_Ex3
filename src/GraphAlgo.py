@@ -15,10 +15,34 @@ class GraphAlgo(GraphAlgoInterface):
         return self.g
 
     def load_from_json(self, file_name: str) -> bool:
-        pass
+        new_graph = DiGraph()
+        try:
+            with open(file_name, "r") as f:
+                loaded = json.load(f)
+                for i in loaded.get("Nodes"):
+                    id = i.get("id")
+                    pos = i.get("pos").split(sep=",")
+                    post = (float(pos[0]), float(pos[1]), float(pos[2]))
+                    new_graph.add_node(id, post)
+                for i in loaded.get("Edges"):
+                    src = i.get("src")
+                    w = i.get("w")
+                    dest = i.get("dest")
+                    new_graph.add_edge(src, dest, w)
+            self.g = new_graph
+            return True
+        except IOError as e:
+            print("Couldn't load graph. No changes made")
+            return False
 
     def save_to_json(self, file_name: str) -> bool:
         pass
+        # try:
+        #     with open(file_name, "w") as f:
+        #
+        #         # json.dump(self.vehicles, default=self.encoder, indent=4, fp=f)
+        # except IOError as e:
+        #     print(e)
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         if id1 not in self.g.nodes or id2 not in self.g.nodes:
@@ -102,14 +126,9 @@ class GraphAlgo(GraphAlgoInterface):
 
 
 def main():
-    g = DiGraph()
-    # for i in range(4):
-    #     g.add_node(i)
-    #     g.add_edge(i - 1, i, 1)
-    #     g.add_edge(i, i - 1, 1)
-    ga = GraphAlgo(g)
-    # g.remove_edge(1, 2)
-    print(ga.connected_components())
+    ga = GraphAlgo()
+    ga.load_from_json("../data/A0")
+    print(ga.get_graph())
 
 
 if __name__ == '__main__':
