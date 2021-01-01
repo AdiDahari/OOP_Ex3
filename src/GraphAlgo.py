@@ -36,13 +36,29 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
     def save_to_json(self, file_name: str) -> bool:
-        pass
-        # try:
-        #     with open(file_name, "w") as f:
-        #
-        #         # json.dump(self.vehicles, default=self.encoder, indent=4, fp=f)
-        # except IOError as e:
-        #     print(e)
+        try:
+            with open(file_name, "w") as f:
+                saved = {"Edges": [], "Nodes": []}
+                for i in self.g.nodes.values():
+                    key = i.key
+                    pos = []
+                    for j in i.pos:
+                        pos.append(str(j))
+                    pos_str = f"{pos[0]},{pos[1]},{pos[2]}"
+                    saved["Nodes"].append({"pos": pos_str, "id": key})
+                    for j in self.g.all_in_edges_of_node(key):
+                        src = j
+                        w = self.g.all_in_edges_of_node(key).get(j)
+                        edge = {"src": src, "w": w, "dest": key}
+                        saved["Edges"].append(edge)
+                    for j in self.g.all_out_edges_of_node(key):
+                        dest = j
+                        w = self.g.all_out_edges_of_node(key).get(j)
+                        edge = {"src": key, "w": w, "dest": dest}
+                        saved["Edges"].append(edge)
+                json.dump(saved, indent=4, fp=f)
+        except IOError as e:
+            print(e)
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         if id1 not in self.g.nodes or id2 not in self.g.nodes:
@@ -128,7 +144,6 @@ class GraphAlgo(GraphAlgoInterface):
 def main():
     ga = GraphAlgo()
     ga.load_from_json("../data/A0")
-    print(ga.get_graph())
 
 
 if __name__ == '__main__':

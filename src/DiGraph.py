@@ -92,7 +92,7 @@ class DiGraph(GraphInterface):
         if (n1 is not None) and (n2 is not None) and (n1.e_out.get(id2) is None) and (weight >= 0):
             n1.e_out[id2] = weight
             n2.e_in[id1] = weight
-            e = (id1, id2)
+            e = {"src": id1, "W": weight, "Dest": id2}
             self.edges.append(e)
             self.ec += 1
             self.mc += 1
