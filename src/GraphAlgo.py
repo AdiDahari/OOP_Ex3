@@ -1,7 +1,9 @@
+import json
 from math import inf
 from typing import List
+import numpy as np
+from matplotlib import pyplot as plt
 
-import json
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -9,6 +11,8 @@ from src.GraphInterface import GraphInterface
 
 class GraphAlgo(GraphAlgoInterface):
     def __init__(self, graph: DiGraph = None):
+        if graph is None:
+            graph = DiGraph()
         self.g = graph
 
     def get_graph(self) -> GraphInterface:
@@ -21,8 +25,10 @@ class GraphAlgo(GraphAlgoInterface):
                 loaded = json.load(f)
                 for i in loaded.get("Nodes"):
                     id = i.get("id")
-                    pos = i.get("pos").split(sep=",")
-                    post = (float(pos[0]), float(pos[1]), float(pos[2]))
+                    post = None
+                    if i.get("pos") is not None:
+                        pos = i.get("pos").split(sep=",")
+                        post = (float(pos[0]), float(pos[1]), float(pos[2]))
                     new_graph.add_node(id, post)
                 for i in loaded.get("Edges"):
                     src = i.get("src")
@@ -138,12 +144,31 @@ class GraphAlgo(GraphAlgoInterface):
         return components
 
     def plot_graph(self) -> None:
-        pass
+        x_vals = []
+        y_vals = []
+        for i in self.g.nodes.values():
+            pos = i.pos
+            x_vals.append(pos[0])
+            y_vals.append(pos[1])
+        node = self.g.nodes[0]
+        x_vals.append(node.pos[0])
+        y_vals.append(node.pos[1])
+        for i in self.g.edges:
+            src_key = i.get("src")
+            dest_key = i.get("dest")
+            src = self.g.nodes.get(src_key)
+            dest = self.g.nodes.get(dest_key)
+            plt.annotate("", xy=(dest.pos[0], dest.pos[1]), xytext=(src.pos[0], src.pos[1]),
+                         arrowprops=dict(edgecolor='green', facecolor='black', arrowstyle='->'))
+        plt.plot(x_vals, y_vals, ".", color='darkblue')
+        plt.legend()
+        plt.show()
 
 
 def main():
     ga = GraphAlgo()
-    ga.load_from_json("../data/A0")
+    ga.load_from_json("../data/t0.json")
+    ga.plot_graph()
 
 
 if __name__ == '__main__':

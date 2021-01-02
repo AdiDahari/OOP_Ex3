@@ -1,3 +1,4 @@
+import random
 from typing import Tuple
 
 from src.GraphInterface import GraphInterface
@@ -15,6 +16,8 @@ class Node:
 
     def __init__(self, key: int, pos: Tuple = None, edges_in: dict = None, edges_out: dict = None):
         self.key = key
+        if pos is None:
+            pos = (random.uniform(35.0, 35.3), random.uniform(32.09, 32.11), 0.0)
         self.pos = pos
         if edges_in is None:
             self.e_in = {}
@@ -92,7 +95,7 @@ class DiGraph(GraphInterface):
         if (n1 is not None) and (n2 is not None) and (n1.e_out.get(id2) is None) and (weight >= 0):
             n1.e_out[id2] = weight
             n2.e_in[id1] = weight
-            e = {"src": id1, "W": weight, "Dest": id2}
+            e = {"src": id1, "w": weight, "dest": id2}
             self.edges.append(e)
             self.ec += 1
             self.mc += 1
@@ -143,7 +146,7 @@ def main():
     for i in range(10):
         g.add_node(i)
         g.add_edge(0, i, i*10)
-    print(g.all_out_edges_of_node(0))
+    print(g.edges)
 
 
 if __name__ == '__main__':
