@@ -159,7 +159,7 @@ class GraphAlgo(GraphAlgoInterface):
             src = self.g.nodes.get(src_key)
             dest = self.g.nodes.get(dest_key)
             plt.annotate("", xy=(dest.pos[0], dest.pos[1]), xytext=(src.pos[0], src.pos[1]),
-                         arrowprops=dict(edgecolor='green', facecolor='black', arrowstyle='->'))
+                         arrowprops=dict(edgecolor='green', facecolor='red', arrowstyle='->'))
         plt.plot(x_vals, y_vals, ".", color='darkblue')
         plt.legend()
         plt.show()
@@ -167,7 +167,7 @@ class GraphAlgo(GraphAlgoInterface):
 
 def main():
     ga = GraphAlgo()
-    ga.load_from_json("../data/t0.json")
+    ga.load_from_json("../data/A0")
     ga.plot_graph()
 
 
