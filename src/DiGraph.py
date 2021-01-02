@@ -195,7 +195,7 @@ class DiGraph(GraphInterface):
     def remove_node(self, node_id: int) -> bool:
         """
         Override interface method, deletes a node off this graph, and all edges associated with it.
-        if node is not related to this graph does nothing and returns False
+        if node is not related to this graph does nothing and returns False.
         """
         if node_id not in self.nodes:
             return False
@@ -221,6 +221,9 @@ class DiGraph(GraphInterface):
         return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
+        """
+        Override interface method, deletes an edge off this graph, returns False if no such edge in graph.
+        """
         n1 = self.nodes.get(node_id1)
         n2 = self.nodes.get(node_id2)
         e = {'src': node_id1, 'w': n1.e_out.get(node_id2), 'dest': node_id2}
