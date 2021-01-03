@@ -87,7 +87,7 @@ class GraphAlgo(GraphAlgoInterface):
                     parents[i] = n.key
                     q.append(self.g.nodes[i])
         if not dists.__contains__(id2):
-            return inf, None
+            return inf, []
         path = []
         itr = id2
         while itr is not id1:
@@ -100,7 +100,7 @@ class GraphAlgo(GraphAlgoInterface):
         if id1 not in self.g.nodes:
             return None
         start = self.g.nodes.get(id1)
-        connected = [start, ]
+        connected = [id1, ]
         q = [start, ]
         visited1 = [start, ]
         visited2 = [start, ]
@@ -123,12 +123,13 @@ class GraphAlgo(GraphAlgoInterface):
                     q.append(nn)
         if len(visited1) <= len(visited2):
             for i in visited1:
-                if visited2.__contains__(i) and not connected.__contains__(i):
-                    connected.append(i)
+                if visited2.__contains__(i) and not connected.__contains__(i.key):
+                    connected.append(i.key)
         elif len(visited1) > len(visited2):
             for i in visited2:
-                if visited1.__contains__(i) and not connected.__contains__(i):
-                    connected.append(i)
+                if visited1.__contains__(i) and not connected.__contains__(i.key):
+                    connected.append(i.key)
+        connected.sort()
         return connected
 
     def connected_components(self) -> List[list]:
@@ -136,7 +137,7 @@ class GraphAlgo(GraphAlgoInterface):
         for i in self.g.nodes.values():
             flag = False
             for j in components:
-                if j.__contains__(i):
+                if j.__contains__(i.key):
                     flag = True
                     break
             if not flag:
@@ -161,7 +162,7 @@ class GraphAlgo(GraphAlgoInterface):
             plt.annotate("", xy=(dest.pos[0], dest.pos[1]), xytext=(src.pos[0], src.pos[1]),
                          arrowprops=dict(edgecolor='green', facecolor='red', arrowstyle='->'))
         plt.plot(x_vals, y_vals, ".", color='darkblue')
-        plt.legend()
+        # plt.legend("")
         plt.show()
 
 

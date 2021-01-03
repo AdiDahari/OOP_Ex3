@@ -44,13 +44,13 @@ class Node:
         """
         Override method for string representation of a node.
         """
-        return f"pos:{self.pos}, id:{self.key}"
+        return f"{self.key}"
 
     def __repr__(self):
         """
         Override method for string representation of a node.
         """
-        return str(self)
+        return f"{self.key}: |edges out| {len(self.e_out)} |edges in| {len(self.e_in)}"
 
     def __lt__(self, other):
         """
@@ -63,6 +63,9 @@ class Node:
         Override method for default hashing a node by it's key.
         """
         return self.key
+
+    def get_edge(self, other_key: int) -> float:
+        return self.e_out[other_key]
 
 
 class DiGraph(GraphInterface):
@@ -99,7 +102,7 @@ class DiGraph(GraphInterface):
         """
         Override method for string representation of a graph.
         """
-        return f"Nodes: {self.nodes}, Edges: {self.edges}, eCount: {self.ec}, mCount: {self.mc}"
+        return f"Graph: |V|={self.v_size()} , |E|={self.e_size()}"
 
     def __repr__(self):
         """
@@ -115,35 +118,35 @@ class DiGraph(GraphInterface):
 
     def v_size(self) -> int:
         """
-        Override interface method, returns the number of nodes in graph.
+        Returns the number of vertices in this graph
+        @return: The number of vertices in this graph
         """
         return len(self.nodes)
 
     def e_size(self) -> int:
         """
-        Override interface method, returns the number of edges in graph.
+        Returns the number of edges in this graph
+        @return: The number of edges in this graph
         """
         return self.ec
 
     def get_all_v(self) -> dict:
-        """
-        Override interface method, returns a dict containing all nodes in graph, mapped by their keys.
+        """return a dictionary of all the nodes in the Graph, each node is represented using a pair
+         (node_id, node_data)
         """
         return self.nodes
 
     def all_in_edges_of_node(self, id1: int) -> dict:
-        """
-        Override interface method, if such key exists in graph,
-        returns a dict containing all edges going into this node.
-        """
+        """return a dictionary of all the nodes connected to (into) node_id ,
+        each node is represented using a pair (other_node_id, weight)
+         """
         if id1 in self.nodes:
             n = self.nodes.get(id1)
             return n.e_in
 
     def all_out_edges_of_node(self, id1: int) -> dict:
-        """
-        Override interface method, if such key exists in graph,
-        returns a dict containing all edges going out of this node.
+        """return a dictionary of all the nodes connected from node_id , each node is represented using a pair
+        (other_node_id, weight)
         """
         if id1 in self.nodes:
             n = self.nodes.get(id1)
@@ -151,19 +154,20 @@ class DiGraph(GraphInterface):
 
     def get_mc(self) -> int:
         """
-        Override interface method, returns the number of changes made in graph since initialized.
+        Returns the current version of this graph,
+        on every change in the graph state - the MC should be increased
+        @return: The current version of this graph.
         """
         return self.mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         """
-        Override interface method, this method connects 2 nodes by a directed edge going out of id1 and into id2.
-        if one or both nodes aren't related to this graph,
-        the weight given is a negative number or id1 == id2, returns False.
-        id1's node is being added by a new out-edge with the given weight.
-        id2's node is being added by a new in-edge with the given weight.
-        edges list of the graph is appended by a new edge.
-        ec and mc updated relatively.
+        Adds an edge to the graph.
+        @param id1: The start node of the edge
+        @param id2: The end node of the edge
+        @param weight: The weight of the edge
+        @return: True if the edge was added successfully, False o.w.
+        Note: If the edge already exists or one of the nodes dose not exists the functions will do nothing
         """
         if id1 == id2:
             return False
@@ -181,9 +185,11 @@ class DiGraph(GraphInterface):
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         """
-        Override interface method, adds a new node to the graph with a given key and (optional) a pos Tuple.
-        if such key already exist in graph returns False and does nothing.
-        mc updated relatively.
+        Adds a node to the graph.
+        @param node_id: The node ID
+        @param pos: The position of the node
+        @return: True if the node was added successfully, False o.w.
+        Note: if the node id already exists the node will not be added
         """
         if node_id in self.nodes:
             return False
@@ -194,8 +200,10 @@ class DiGraph(GraphInterface):
 
     def remove_node(self, node_id: int) -> bool:
         """
-        Override interface method, deletes a node off this graph, and all edges associated with it.
-        if node is not related to this graph does nothing and returns False.
+        Removes a node from the graph.
+        @param node_id: The node ID
+        @return: True if the node was removed successfully, False o.w.
+        Note: if the node id does not exists the function will do nothing
         """
         if node_id not in self.nodes:
             return False
@@ -222,7 +230,11 @@ class DiGraph(GraphInterface):
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         """
-        Override interface method, deletes an edge off this graph, returns False if no such edge in graph.
+        Removes an edge from the graph.
+        @param node_id1: The start node of the edge
+        @param node_id2: The end node of the edge
+        @return: True if the edge was removed successfully, False o.w.
+        Note: If such an edge does not exists the function will do nothing
         """
         n1 = self.nodes.get(node_id1)
         n2 = self.nodes.get(node_id2)
@@ -245,6 +257,8 @@ def main():
     print(g.edges)
     g.remove_edge(0, 9)
     g.remove_node(100)
+    for i in range(100):
+        g.remove_node(i)
     print(g.edges)
 
 
