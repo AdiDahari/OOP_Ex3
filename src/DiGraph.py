@@ -254,12 +254,6 @@ def main():
     for i in range(10):
         g.add_node(i)
         g.add_edge(i-1, i, i * 10)
-    print(g.edges)
-    g.remove_edge(0, 9)
-    g.remove_node(100)
-    for i in range(100):
-        g.remove_node(i)
-    print(g.edges)
 
 
 if __name__ == '__main__':
