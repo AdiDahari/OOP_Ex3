@@ -11,7 +11,7 @@ def test_v10_e80():
     end = time.time()
     print(f"Shortest Path = {end - start}")
     start = time.time()
-    g1.connected_components()
+    print(g1.connected_components())
     end = time.time()
     print(f"Connected Components = {end - start}\n")
 
