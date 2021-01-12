@@ -1,5 +1,4 @@
 import json
-import time
 from math import inf
 from typing import List
 from matplotlib import pyplot as plt
@@ -10,15 +9,34 @@ from src.Tarjan import tarjan
 
 
 class GraphAlgo(GraphAlgoInterface):
+    """
+    This class implements GraphAlgoInterface.
+    it contains algorithms applied to a Directed Weighted Graph (implemented in DiGraph class).
+
+    """
+
     def __init__(self, graph: DiGraph = None):
+        """This is the constructor of the class.
+        it has only 1 parameter - a directed weighted graph.
+        if no such graph given, a new graph of the DiGraph implementation is created and initialized.
+        else the given graph is initialized as the underlying graph.
+        """
         if graph is None:
             graph = DiGraph()
         self.g = graph
 
     def get_graph(self) -> GraphInterface:
+        """
+        return: a shallow copy of the directed graph on which the algorithm works on.
+        """
         return self.g
 
     def load_from_json(self, file_name: str) -> bool:
+        """
+        Loads a graph from a json file.
+        @param file_name: The path to the json file
+        @returns True if the loading was successful, False o.w.
+        """
         new_graph = DiGraph()
         try:
             with open(file_name, "r") as f:
@@ -42,6 +60,11 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
     def save_to_json(self, file_name: str) -> bool:
+        """
+        Saves the graph in JSON format to a file
+        @param file_name: The path to the out file
+        @return: True if the save was successful, False o.w.
+        """
         try:
             with open(file_name, "w") as f:
                 saved = {"Edges": [], "Nodes": []}
@@ -69,6 +92,13 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
+        """
+        Returns the shortest path from node id1 to node id2 using Dijkstra's Algorithm
+        @param id1: The start node id
+        @param id2: The end node id
+        @return: The distance of the path, a list of the nodes ids that the path goes through.
+        If there is no path between id1 and id2, or one of them does not exist the function returns (inf, [])
+        """
         if id1 not in self.g.nodes or id2 not in self.g.nodes:
             return inf, []
         if id1 is id2:
@@ -98,6 +128,13 @@ class GraphAlgo(GraphAlgoInterface):
         return dists[id2], path
 
     def connected_component(self, id1: int) -> list:
+        """
+        Finds the Strongly Connected Component(SCC) that node id1 is a part of.
+        @param id1: The node id
+        @return: The list of nodes in the SCC
+        Notes:
+        If the graph is None or id1 is not in the graph, the function should return an empty list []
+        """
         if id1 not in self.g.nodes:
             return []
         start = self.g.nodes.get(id1)
@@ -105,7 +142,7 @@ class GraphAlgo(GraphAlgoInterface):
         q = [start, ]
         visited1 = [start, ]
         visited2 = [start, ]
-        while len(q) > 0:
+        while q:
             n = q.pop(0)
             neighs = self.g.all_out_edges_of_node(n.key)
             for i in neighs:
@@ -130,20 +167,36 @@ class GraphAlgo(GraphAlgoInterface):
             for i in visited2:
                 if visited1.__contains__(i) and not connected.__contains__(i.key):
                     connected.append(i.key)
-        connected.sort()
         return connected
 
     def connected_components(self) -> List[list]:
+        """
+        Finds all the Strongly Connected Component(SCC) in the graph.
+        using Tarjan's algorithm in an iterative implementation for being able to check very big graphs.
+        for further information about Tarjan's implementation see Tarjan class doc.
+        @return: The list all SCC
+        Notes:
+        If the graph is None the function should return an empty list []
+        """
         return tarjan(self.g)
 
     def plot_graph(self) -> None:
+        """
+        Plots the graph.
+        If the nodes have a position, the nodes will be placed there.
+        Otherwise, they will be placed in a random but elegant manner.
+        each directed edge is represented as an arrow, which points the dest, starting from src.
+        each node is represented as a red dot with it's key above it's location.
+        @return: None
+        """
         x_values = []
         y_values = []
         for i in self.g.nodes.values():
             pos = i.pos
             x_values.append(pos[0])
             y_values.append(pos[1])
-            plt.annotate(text=f"{i.key}", xy=(pos[0]+0.0002, pos[1]+0.0002), xytext=(pos[0]-0.0002, pos[1]+0.0002),  color='darkcyan')
+            plt.annotate(text=f"{i.key}", xy=(pos[0] + 0.0002, pos[1] + 0.0002),
+                         xytext=(pos[0] - 0.0002, pos[1] + 0.0002), color='darkcyan')
         node = self.g.nodes[0]
         x_values.append(node.pos[0])
         y_values.append(node.pos[1])
@@ -159,14 +212,7 @@ class GraphAlgo(GraphAlgoInterface):
 
 
 def main():
-    ga = GraphAlgo()
-    for i in range(10):
-        ga.get_graph().add_node(i)
-        ga.get_graph().add_edge(i-1, i, 1)
-    ga.get_graph().add_edge(1, 0, 1)
-    ga.get_graph().add_edge(0, 1, 1)
-    print(ga.connected_components())
-    ga.plot_graph()
+    pass
 
 
 if __name__ == '__main__':
