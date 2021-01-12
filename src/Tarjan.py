@@ -1,4 +1,21 @@
 from typing import List
+"""
+This class additionally made for handling the connected_components method of GraphAlgo's class.
+this implementation gives a very good time complexity for finding the connected components of a given Directed Graph in
+a very efficient way.
+the main structure of this implementation is based on the DFS algorithm.
+each node is being checked only once by holding all checked elements in a data structure and assuring each iteration 
+the given node hasn't been checked and applied for another connected component.
+the wrapping element is the tarjan method, which handles the iteration as an alternative 
+to the recursive implementation of Tarjan.
+an iterator (itr) is marking each iteration to the outer elements of tarjan method each iteration.
+at each end of the DFS iterations the scc_list, which holds all the components already found is extended by a new list.
+the conversion of the recursive method to the iterative one has been done by the ideas the following links:
+1. https://www.youtube.com/watch?v=wUgWX0nc4NY&t=376s - William Fiset's youtube video visualizing and explaining
+                                                        Tarjan's algorithm on directed graphs.
+
+2. https://llbit.se/?p=3379 - Jesper Öqvist's blog, a PhD student of Lund University in Sweden.
+"""
 
 
 def depth_first_search(g, n, low_link, id_dict, scc_list, scc_set, itr):
