@@ -15,7 +15,7 @@ class GraphAlgo(GraphAlgoInterface):
 
     """
 
-    def __init__(self, graph: DiGraph = None):
+    def __init__(self, graph: GraphInterface = None):
         """This is the constructor of the class.
         it has only 1 parameter - a directed weighted graph.
         if no such graph given, a new graph of the DiGraph implementation is created and initialized.
