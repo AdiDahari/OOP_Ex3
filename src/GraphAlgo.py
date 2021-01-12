@@ -143,6 +143,7 @@ class GraphAlgo(GraphAlgoInterface):
             pos = i.pos
             x_values.append(pos[0])
             y_values.append(pos[1])
+            plt.annotate(text=f"{i.key}", xy=(pos[0]+0.0002, pos[1]+0.0002), xytext=(pos[0]-0.0002, pos[1]+0.0002),  color='darkcyan')
         node = self.g.nodes[0]
         x_values.append(node.pos[0])
         y_values.append(node.pos[1])
@@ -154,17 +155,17 @@ class GraphAlgo(GraphAlgoInterface):
             plt.annotate("", xy=(dest.pos[0], dest.pos[1]), xytext=(src.pos[0], src.pos[1]),
                          arrowprops=dict(edgecolor='olive', facecolor='black', arrowstyle='-|>'))
         plt.plot(x_values, y_values, ".", color='red')
-        # plt.legend("")
         plt.show()
 
 
 def main():
     ga = GraphAlgo()
-    ga.load_from_json("../data/A0")
-    start = time.time()
-    ga.connected_components()
-    end = time.time()
-    print(f"{(end - start)}")
+    for i in range(10):
+        ga.get_graph().add_node(i)
+        ga.get_graph().add_edge(i-1, i, 1)
+    ga.get_graph().add_edge(1, 0, 1)
+    ga.get_graph().add_edge(0, 1, 1)
+    print(ga.connected_components())
     ga.plot_graph()
 
 

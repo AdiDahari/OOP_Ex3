@@ -41,7 +41,14 @@ def tarjan(g) -> List[list]:
     ids = {}
     scc_set = set()
     scc_list = []
+    ans = []
     for node in g.get_all_v():
         if node not in scc_set:
             depth_first_search(g, node, low_link, ids, scc_list, scc_set, itr)
-    return scc_list
+
+    for i in scc_list:
+        curr_list = []
+        for j in i:
+            curr_list.append(j.key)
+        ans.append(curr_list)
+    return ans

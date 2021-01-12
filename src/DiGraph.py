@@ -247,14 +247,3 @@ class DiGraph(GraphInterface):
         self.ec -= 1
         self.mc += 1
         return True
-
-
-def main():
-    g = DiGraph()
-    for i in range(10):
-        g.add_node(i)
-        g.add_edge(i-1, i, i * 10)
-
-
-if __name__ == '__main__':
-    main()
