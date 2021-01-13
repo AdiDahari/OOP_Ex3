@@ -29,10 +29,11 @@ def depth_first_search(g, n, low_link, id_dict, scc_list, scc_set, itr):
                 if neighbor not in scc_set:
                     if low_link[n] > low_link[neighbor]:
                         low_link[n] = low_link[neighbor]
-            if low_link[n] is not id_dict[n]:
-                if low_link[n] not in scc:
-                    scc[low_link[n]] = []
-                scc[low_link[n]].extend(scc[min_link])
+            curr = low_link[n]
+            if curr is not id_dict[n]:
+                if curr not in scc:
+                    scc[curr] = []
+                scc[curr].extend(scc[min_link])
                 for i in scc[min_link]:
                     key = i.key
                     low_link[key] = low_link[n]
