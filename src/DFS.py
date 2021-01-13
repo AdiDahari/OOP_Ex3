@@ -18,7 +18,8 @@ def depth_first_search(g, n, low_link, id_dict, scc_list, scc_set, itr):
             low_link[n] = itr
             scc[itr] = [nodes[n], ]
             itr = itr + 1
-        for neighbor in g.all_out_edges_of_node(n):
+        out_edges = g.all_out_edges_of_node(n)
+        for neighbor in out_edges:
             if neighbor not in id_dict:
                 flag = False
                 s.append(neighbor)
