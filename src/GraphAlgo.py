@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
-from src.Tarjan import tarjan
+from src.DFS import depth_first_search
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -171,14 +171,41 @@ class GraphAlgo(GraphAlgoInterface):
 
     def connected_components(self) -> List[list]:
         """
-        Finds all the Strongly Connected Component(SCC) in the graph.
-        using Tarjan's algorithm in an iterative implementation for being able to check very big graphs.
-        for further information about Tarjan's implementation see Tarjan class doc.
-        @return: The list all SCC
-        Notes:
-        If the graph is None the function should return an empty list []
+        this method's implementation gives a very good time complexity for finding the connected components of a given
+        Directed Graph in a very efficient way.
+        the main structure of this implementation is based on the DFS algorithm built in DFS.py.
+        each node is being checked only once by holding all checked elements in a data structure and assuring each
+        iteration the given node hasn't been checked and applied for another connected component.
+        the wrapping element is the tarjan method, which handles the iteration as an alternative
+        to the recursive implementation of Tarjan.
+        an iterator (itr) is marking each iteration to the outer elements of tarjan method each iteration.
+        at each end of the DFS iterations the scc_list, which holds all the components already found is extended by a
+        new list.
+        the conversion of the recursive method to the iterative one has been done by the ideas explained in the
+        following links:
+            1. https://www.youtube.com/watch?v=wUgWX0nc4NY&t=376s - William Fiset's youtube video visualizing and
+            explaining Tarjan's algorithm on directed graphs.
+
+            2. https://llbit.se/?p=3379 - Jesper Öqvist's blog, a PhD student of Lund University in Sweden, gives an
+            example of an iterative implementation of the Tarjan's algorithm.
         """
-        return tarjan(self.g)
+        g = self.g
+        itr = 0
+        low_link = {}
+        ids = {}
+        scc_set = set()
+        scc_list = []
+        ans = []
+        for node in g.get_all_v():
+            if node not in scc_set:
+                depth_first_search(g, node, low_link, ids, scc_list, scc_set, itr)
+
+        for i in scc_list:
+            curr_list = []
+            for j in i:
+                curr_list.append(j.key)
+            ans.append(curr_list)
+        return ans
 
     def plot_graph(self) -> None:
         """
