@@ -133,41 +133,26 @@ class GraphAlgo(GraphAlgoInterface):
         @param id1: The node id
         @return: The list of nodes in the SCC
         Notes:
-        If the graph is None or id1 is not in the graph, the function should return an empty list []
+        If the graph is None or id1 is not in the graph, the function should return an empty list [].
+        uses the Tarjan's algorithm on a specific given node.
         """
         if id1 not in self.g.nodes:
             return []
-        start = self.g.nodes.get(id1)
-        connected = [id1, ]
-        q = [start, ]
-        visited1 = [start, ]
-        visited2 = [start, ]
-        while q:
-            n = q.pop(0)
-            neighs = self.g.all_out_edges_of_node(n.key)
-            for i in neighs:
-                nn = self.g.nodes[i]
-                if not visited1.__contains__(nn):
-                    visited1.append(nn)
-                    q.append(nn)
-        q.append(start)
-        while q:
-            n = q.pop(0)
-            neighs = self.g.all_in_edges_of_node(n.key)
-            for i in neighs:
-                nn = self.g.nodes[i]
-                if not visited2.__contains__(nn):
-                    visited2.append(nn)
-                    q.append(nn)
-        if len(visited1) <= len(visited2):
-            for i in visited1:
-                if visited2.__contains__(i) and not connected.__contains__(i.key):
-                    connected.append(i.key)
-        elif len(visited1) > len(visited2):
-            for i in visited2:
-                if visited1.__contains__(i) and not connected.__contains__(i.key):
-                    connected.append(i.key)
-        return connected
+        g = self.g
+        itr = 0
+        low_link = {}
+        ids = {}
+        scc_set = set()
+        scc_list = []
+        ans = []
+        depth_first_search(g, id1, low_link, ids, scc_list, scc_set, itr)
+
+        for i in scc_list:
+            curr_list = []
+            for j in i:
+                curr_list.append(j.key)
+            ans.append(curr_list)
+        return ans[0]
 
     def connected_components(self) -> List[list]:
         """

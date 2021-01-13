@@ -13,7 +13,11 @@ def test_v10_e80():
     start = time.time()
     print(g1.connected_components())
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    print(g1.connected_component(0))
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def test_v100_e800():
@@ -27,7 +31,11 @@ def test_v100_e800():
     start = time.time()
     g2.connected_components()
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    g2.connected_component(0)
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def test_v1000_e8000():
@@ -41,7 +49,11 @@ def test_v1000_e8000():
     start = time.time()
     g3.connected_components()
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    g3.connected_component(0)
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def test_v10000_e80000():
@@ -55,7 +67,11 @@ def test_v10000_e80000():
     start = time.time()
     g4.connected_components()
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    g4.connected_component(0)
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def test_v20000_e160000():
@@ -69,7 +85,11 @@ def test_v20000_e160000():
     start = time.time()
     g5.connected_components()
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    g5.connected_component(0)
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def test_v30000_e240000():
@@ -83,7 +103,11 @@ def test_v30000_e240000():
     start = time.time()
     g6.connected_components()
     end = time.time()
-    print(f"Connected Components = {end - start}\n")
+    print(f"Connected Components = {end - start}")
+    start = time.time()
+    g6.connected_component(0)
+    end = time.time()
+    print(f"Connected Component(0) = {end - start}\n")
 
 
 def main():
